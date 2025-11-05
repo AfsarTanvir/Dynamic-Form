@@ -1,24 +1,44 @@
-import { useState } from 'react'
-import type { FieldsType } from '../features/Home'
+import type { FieldsType } from "../features/Home";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../app/store";
+import { Form, Input } from "antd";
+import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
 
-function PasswordComponent({ field }: { field: FieldsType }) {
-  const [passwordField, setPasswordField] = useState('');
+function PasswordComponent({
+  field
+}: {
+  field: FieldsType
+}) {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    dispatch(dynamicFormSaveData.actions.radioDataInsert(value));
+  };
+  
   return (
-    <div>
-      <label className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100">
-        {field.name}
-      </label>
-      <div className="mt-2">
-        <input
-          name={field.name}
-          value={passwordField}
-          type={field.type}
-          onChange={(e) => setPasswordField(e.target.value)}
+    <>
+      <Form.Item
+        name={["user", "password"]}
+        label={field.label}
+        rules={[
+          {
+            required: true,
+            message: field.validations[0]?.message || "Password is required",
+          },
+          {
+            min: 8,
+            message: field.validations[1]?.message || "Enter a valid Password",
+          },
+        ]}
+      >
+        <Input
+          type="password"
           placeholder={field.placeholder}
-          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+          onChange={handleChange}
         />
-      </div>
-    </div>
+      </Form.Item>
+    </>
   );
 }
 export default PasswordComponent;

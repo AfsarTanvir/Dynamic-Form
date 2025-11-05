@@ -1,28 +1,125 @@
-import { useState } from 'react'
-import type { FieldsType } from '../features/Home';
+import { Form, Input } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import type { FieldsType } from "../features/Home";
+import type { AppDispatch, RootState } from "../app/store";
+import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
 
 function TextComponent({ field }: { field: FieldsType }) {
-    const [textField, setTextField] = useState("");
+  const dispatch = useDispatch<AppDispatch>();
+
+  if(field.condition){
+    const con = field.condition;
+    const data = useSelector(
+      (state: RootState) => state.dynamicFormSaveData.Radio
+    );
+    if (con.operator === "===") {
+      if (con.value !== data) {
+        return;
+      }
+    }else{
+      if (con.value === data) {
+        return;
+      }
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    switch (field.id) {
+      case "companyName":
+        dispatch(dynamicFormSaveData.actions.companyNameDataInsert(value));
+        break;
+      case "taxId":
+        dispatch(dynamicFormSaveData.actions.textDataInsert(value));
+        break;
+      case "city":
+        dispatch(dynamicFormSaveData.actions.cityDataInsert(value));
+        break;
+      case "state":
+        dispatch(dynamicFormSaveData.actions.stateDataInsert(value));
+        break;
+      case "zipCode":
+        dispatch(dynamicFormSaveData.actions.zipCodeDataInsert(value));
+        break;
+      case "adminCode":
+        dispatch(dynamicFormSaveData.actions.adminCodeDataInsert(value));
+        break;
+      case "comments":
+        dispatch(dynamicFormSaveData.actions.commentDataInsert(value));
+        break;
+      default:
+        break;
+    }
+  };
+
+  const rulesArr: any[] = [];
+  switch (field.id) {
+    case "companyName":
+      rulesArr.push({
+        required: true,
+        message: "Company name is required for business accounts",
+      });
+      break;
+    case "taxId":
+      rulesArr.push({
+        required: true,
+        message: "Company name is required for business accounts",
+      });
+      break;
+    case "city":
+      rulesArr.push({
+        required: true,
+        message: "Please select a city",
+      });
+      break;
+    case "state":
+      rulesArr.push({
+        required: true,
+        message: "Please select a state",
+      });
+      break;
+    case "zipCode":
+      rulesArr.push({
+        required: true,
+        message:  "Zip code is required",
+      });
+      rulesArr.push({
+        pattern: "^[0-9]{5}$",
+        message: "Zip code must be 5 digits",
+      });
+      break;
+    case "adminCode":
+      rulesArr.push({
+        required: true,
+        message: "Any namdmin code is required for admin email",
+      });
+      rulesArr.push({
+        min: 6,
+        message: "Admin code must be at least 6 characters",
+      });
+      break;
+    case "comments":
+      rulesArr.push({
+        max: 500,
+        message: "Company name is required for business accounts",
+      });
+      break;
+    default:
+      break;
+  }
+
   return (
-    <div>
-      <label
-        htmlFor={field.type}
-        className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100"
-      >
-        {field.name}
-      </label>
-      <div className="mt-2">
-        <input
-          id={field.id}
-          value={textField}
-          type={field.type}
-          onChange={(e) => setTextField(e.target.value)}
+    <>
+      <Form.Item name={["user", field.id]} label={field.label} rules={rulesArr}>
+        <Input
+          type="text"
           placeholder={field.placeholder}
-          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+          onChange={handleChange}
         />
-      </div>
-    </div>
+      </Form.Item>
+    </>
   );
 }
 
-export default TextComponent
+export default TextComponent;

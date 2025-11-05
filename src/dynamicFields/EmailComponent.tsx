@@ -1,40 +1,44 @@
-import { useState } from "react";
 import type { FieldsType } from "../features/Home";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../app/store";
+import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
+import { Form, Input } from "antd";
 
 function EmailComponent({
-  field,
-  triggerValidation,
+  field
 }: {
-  field: FieldsType;
-  triggerValidation: boolean;
+  field: FieldsType
 }) {
-  const [emailField, setEmailField] = useState<string>("");
+  const dispatch = useDispatch<AppDispatch>();
 
-  function handleSubmit(){
-    
-  }
-  if (triggerValidation) 
-    handleSubmit();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    dispatch(dynamicFormSaveData.actions.radioDataInsert(value));
+  };
 
   return (
-    <div>
-      <label
-        htmlFor={field.type}
-        className="block text-sm/6 font-medium text-gray-900 dark:text-gray-100"
+    <>
+      <Form.Item
+        name={["user", "email"]}
+        label={field.label}
+        rules={[
+          {
+            required: true,
+            message: field.validations[0]?.message || "Email is required",
+          },
+          {
+            type: "email",
+            message: field.validations[1]?.message || "Enter a valid email",
+          },
+        ]}
       >
-        {field.name}
-      </label>
-      <div className="mt-2">
-        <input
-          id={field.id}
-          value={emailField}
-          type={field.type}
-          onChange={(e) => setEmailField(e.target.value)}
+        <Input
+          type="email"
           placeholder={field.placeholder}
-          className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+          onChange={handleChange}
         />
-      </div>
-    </div>
+      </Form.Item>
+    </>
   );
 }
 

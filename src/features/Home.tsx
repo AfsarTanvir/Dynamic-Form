@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Fields from "../dynamicFields/Fields";
+import ShowData from "./ShowData";
+import { Form, type FormProps } from "antd";
 
 export type ValidationType = {
   rule: string;
@@ -10,13 +12,13 @@ export type ValidationType = {
 export type ConditionType = {
     field: string;
     operator: string;
-    value: string;
+    value: string | boolean;
 }
 
 export type OptionsType = {
-    label: string;
-    value: string;
-}
+  label: string;
+  value: string;
+};
 
 export type FieldsType = {
   id: string;
@@ -29,6 +31,21 @@ export type FieldsType = {
   defaultValue?: string | boolean;
   placeholder?: string;
   condition?: ConditionType;
+  dependsOn?: string; 
+};
+
+type FieldType = {
+  username?: string;
+  password?: string;
+  remember?: string;
+};
+
+const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+  console.log('Success:', values);
+};
+
+const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+  console.log('Failed:', errorInfo);
 };
 
 type DataType = {
@@ -51,14 +68,25 @@ function Home() {
     setTimeout(() => setTriggerValidation(false), 3000);
   };
 
+  ShowData();
+
   return (
     <>
       <h1>Welcome</h1>
       {myData && (
-        <>
+        <div className="card">
           <div>{myData.formId}</div>
           <div>{myData.title}</div>
-          <div>
+          <Form
+            name="basic"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            style={{ maxWidth: 600 }}
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+          >
             {myData.fields.map((f) => (
               <Fields
                 key={f.id}
@@ -66,8 +94,8 @@ function Home() {
                 triggerValidation={triggerValidation}
               />
             ))}
-          </div>
-        </>
+          </Form>
+        </div>
       )}
       <button onClick={handleSubmit}>Submit</button>
     </>

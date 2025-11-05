@@ -1,26 +1,69 @@
-import { useState, type ChangeEvent } from 'react'
-import type { FieldsType } from '../features/Home'
+import { type ChangeEvent } from "react";
+import type { FieldsType } from "../features/Home";
+import { Select } from "antd";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../app/store";
+import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
 
 function SelectComponent({ field }: { field: FieldsType }) {
-    const [selectField, setSelectField] = useState(field.defaultValue);
+  const dispatch = useDispatch<AppDispatch>();
 
-        const districtChange = (
-          event: ChangeEvent<HTMLSelectElement>
-        ): void => {
-          const { value } = event.target;
-            setSelectField(value);
-        };
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    const value = event.target.value;
+    switch (field.id) {
+      case "country":
+        dispatch(dynamicFormSaveData.actions.countryDataInsert(value));
+        break;
+      case "state":
+        dispatch(dynamicFormSaveData.actions.stateDataInsert(value));
+        break;
+      case "offerType":
+        dispatch(dynamicFormSaveData.actions.offerTypeDataInsert(value));
+        break;
+      default:
+        break;
+    }
+  };
+
+  const rulesArr: any[] = [];
+  switch (field.id) {
+    case "country":
+      rulesArr.push({
+        required: true,
+        message: "Please select a country",
+      });
+      break;
+    case "state":
+      rulesArr.push({
+        required: true,
+        message: "Please select a state",
+      });
+      break;
+    case "offerType":
+      rulesArr.push({
+        required: true,
+        message: "Please select offer type",
+      });
+      break;
+    default:
+      break;
+  }
+
   return (
     <>
-      <select onChange={districtChange} defaultValue={selectField?.toString()}>
+      <Select placeholder={field.placeholder} defaultValue={field.defaultValue}>
         {field.options?.map((op) => (
-          <option key={op.value} value={op.value}>
+          <Select.Option
+            key={op.value}
+            value={op.value}
+            onChange={handleChange}
+          >
             {op.label}
-          </option>
+          </Select.Option>
         ))}
-      </select>
+      </Select>
     </>
   );
 }
 
-export default SelectComponent
+export default SelectComponent;
