@@ -3,12 +3,9 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../app/store";
 import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
 import { Form, Input } from "antd";
+import { buildValidationRules } from "../utils/validationHelpers";
 
-function EmailComponent({
-  field
-}: {
-  field: FieldsType
-}) {
+function EmailComponent({ field }: { field: FieldsType }) {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,16 +18,7 @@ function EmailComponent({
       <Form.Item
         name={["user", "email"]}
         label={field.label}
-        rules={[
-          {
-            required: true,
-            message: field.validations[0]?.message || "Email is required",
-          },
-          {
-            type: "email",
-            message: field.validations[1]?.message || "Enter a valid email",
-          },
-        ]}
+        rules={buildValidationRules(field.validations)}
       >
         <Input
           type="email"

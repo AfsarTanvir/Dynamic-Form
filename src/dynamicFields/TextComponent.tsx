@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import type { FieldsType } from "../features/Home";
 import type { AppDispatch, RootState } from "../app/store";
 import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
+import { buildValidationRules } from "../utils/validationHelpers";
 
 function TextComponent({ field }: { field: FieldsType }) {
   const dispatch = useDispatch<AppDispatch>();
 
-  if(field.condition){
+  if (field.condition) {
     const con = field.condition;
     const data = useSelector(
       (state: RootState) => state.dynamicFormSaveData.Radio
@@ -16,7 +17,7 @@ function TextComponent({ field }: { field: FieldsType }) {
       if (con.value !== data) {
         return;
       }
-    }else{
+    } else {
       if (con.value === data) {
         return;
       }
@@ -82,7 +83,7 @@ function TextComponent({ field }: { field: FieldsType }) {
     case "zipCode":
       rulesArr.push({
         required: true,
-        message:  "Zip code is required",
+        message: "Zip code is required",
       });
       rulesArr.push({
         pattern: "^[0-9]{5}$",
@@ -111,7 +112,11 @@ function TextComponent({ field }: { field: FieldsType }) {
 
   return (
     <>
-      <Form.Item name={["user", field.id]} label={field.label} rules={rulesArr}>
+      <Form.Item
+        name={["user", field.id]}
+        label={field.label}
+        rules={buildValidationRules(field.validations)}
+      >
         <Input
           type="text"
           placeholder={field.placeholder}

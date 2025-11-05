@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../app/store";
 import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
 import { Form, Radio, type RadioChangeEvent } from "antd";
+import { buildValidationRules } from "../utils/validationHelpers";
 
 function RadioComponent({ field }: { field: FieldsType }) {
   const [radioField, setRadioField] = useState(field.defaultValue ?? null);
@@ -19,7 +20,11 @@ function RadioComponent({ field }: { field: FieldsType }) {
 
   return (
     <>
-      <Form.Item label={field.label}>
+      <Form.Item
+        name={field.name}
+        label={field.label}
+        rules={buildValidationRules(field.validations)}
+      >
         <Radio.Group
           onChange={handleChange}
           value={radioField}

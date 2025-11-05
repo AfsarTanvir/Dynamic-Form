@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../app/store";
 import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
 import { Form, Input } from "antd";
+import { buildValidationRules } from "../utils/validationHelpers";
 
 function TextareaComponent({ field }: { field: FieldsType }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,7 +32,11 @@ function TextareaComponent({ field }: { field: FieldsType }) {
   }
   return (
     <>
-      <Form.Item name={["user", field.id]} label={field.label} rules={rulesArr}>
+      <Form.Item
+        name={["user", field.id]}
+        label={field.label}
+        rules={buildValidationRules(field.validations)}
+      >
         <Input
           type="textarea"
           placeholder={field.placeholder}
