@@ -1,44 +1,28 @@
-import { type ChangeEvent } from "react";
-import type { FieldsType } from "../features/Home";
-import { Select } from "antd";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "../app/store";
-import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
+import { Form, Select } from "antd";
+import { useSaveDataReducer } from "./hook/useSaveDataReducer";
+import { buildValidationRules } from "../utils/validationHelpers";
+import type { FieldsType } from "../utils/types";
 
 function SelectComponent({ field }: { field: FieldsType }) {
-  const dispatch = useDispatch<AppDispatch>();
-
-  const handleChange = (event: ChangeEvent<HTMLSelectElement>): void => {
-    const value = event.target.value;
-    switch (field.id) {
-      case "country":
-        dispatch(dynamicFormSaveData.actions.countryDataInsert(value));
-        break;
-      case "state":
-        dispatch(dynamicFormSaveData.actions.stateDataInsert(value));
-        break;
-      case "offerType":
-        dispatch(dynamicFormSaveData.actions.offerTypeDataInsert(value));
-        break;
-      default:
-        break;
-    }
+  const saveData = useSaveDataReducer();
+  const handleChange = (newValue: string) => {
+    saveData(field.id, newValue);
   };
 
   return (
-    <div className="gapping">
-      <Select placeholder={field.placeholder} defaultValue={field.defaultValue}>
+    <Form.Item
+      name={["user", field.name]}
+      label={field.label}
+      rules={buildValidationRules(field.validations)}
+    >
+      <Select placeholder={field.placeholder} onChange={handleChange}>
         {field.options?.map((op) => (
-          <Select.Option
-            key={op.value}
-            value={op.value}
-            onChange={handleChange}
-          >
+          <Select.Option key={op.value} value={op.value}>
             {op.label}
           </Select.Option>
         ))}
       </Select>
-    </div>
+    </Form.Item>
   );
 }
 

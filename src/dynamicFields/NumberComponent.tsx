@@ -1,23 +1,14 @@
-import type { FieldsType } from "../features/Home";
 import { Form, InputNumber } from "antd";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "../app/store";
-import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
 import { buildValidationRules } from "../utils/validationHelpers";
+import { useSaveDataReducer } from "./hook/useSaveDataReducer";
+import type { FieldsType } from "../utils/types";
 
 function NumberComponent({ field }: { field: FieldsType }) {
-  const dispatch = useDispatch<AppDispatch>();
-
+  const saveData = useSaveDataReducer();
   const handleChange = (value: number | null) => {
-    switch (field.id) {
-      case "age":
-        if (value)
-          dispatch(dynamicFormSaveData.actions.ageTypeDataInsert(value));
-        break;
-      default:
-        break;
-    }
+    saveData(field.id, value);
   };
+  
   return (
     <>
       <Form.Item

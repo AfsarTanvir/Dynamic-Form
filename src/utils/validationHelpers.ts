@@ -1,4 +1,4 @@
-import type { ValidationType } from "../features/Home";
+import type { ValidationType } from "./types";
 
 export interface ValidationRule {
   required?: boolean;

@@ -1,22 +1,13 @@
-import type { FieldsType } from "../features/Home";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "../app/store";
-import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
 import { Form, Input } from "antd";
 import { buildValidationRules } from "../utils/validationHelpers";
+import { useSaveDataReducer } from "./hook/useSaveDataReducer";
+import type { FieldsType } from "../utils/types";
 
 function TextareaComponent({ field }: { field: FieldsType }) {
-  const dispatch = useDispatch<AppDispatch>();
+  const saveData = useSaveDataReducer();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-
-    switch (field.id) {
-      case "comments":
-        dispatch(dynamicFormSaveData.actions.commentDataInsert(value));
-        break;
-      default:
-        break;
-    }
+    saveData(field.id, value);
   };
 
   return (

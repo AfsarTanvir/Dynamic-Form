@@ -1,21 +1,26 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import Fields from "../dynamicFields/Fields";
-import ShowData from "./ShowData";
 import { Button, Form } from "antd";
-import type { DataType } from "./Home";
+import { useFetchData } from "../shared/hooks/useFetchData";
+import useSaveInitialData from "../shared/hooks/useSaveInitialData";
+import { resetReducer } from "../dynamicFields/hook/useSaveDataReducer";
+import { useDependencyWatcher } from "../dynamicFields/hook/useDependencyWatcher";
 
 const FormRenderer: React.FC = () => {
-  const [myData, setMyData] = useState<DataType | null>(null);
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    fetch(`data.json`)
-      .then((response) => response.json())
-      .then((data) => setMyData(data));
-  }, []);
+  const myData = useFetchData();
+  useSaveInitialData(myData);
+  useDependencyWatcher(myData?.fields ?? [], form);
+
+  const resetAll = () => {
+    form.resetFields();
+    resetReducer();
+  };
 
   const handleSubmit = (values: any) => {
     console.log("Form Submitted:", values);
+    resetAll();
   };
 
   const initialValues = useMemo(() => {
@@ -28,8 +33,6 @@ const FormRenderer: React.FC = () => {
     });
     return defaults;
   }, [myData]);
-
-//   ShowData();
 
   return (
     <>
@@ -48,8 +51,11 @@ const FormRenderer: React.FC = () => {
             <Fields key={field.id} field={field} triggerValidation={false} />
           ))}
 
-          <Button type="primary" htmlType="submit">
+          <Button style={{ margin: "2px" }} type="primary" htmlType="submit">
             Submit
+          </Button>
+          <Button type="primary" onClick={resetAll}>
+            Reset
           </Button>
         </Form>
       )}

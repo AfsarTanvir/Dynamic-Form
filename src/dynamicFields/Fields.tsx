@@ -1,12 +1,16 @@
-import CheckboxComponent from './CheckboxComponent';
-import EmailComponent from './EmailComponent';
-import NumberComponent from './NumberComponent';
-import PasswordComponent from './PasswordComponent';
-import RadioComponent from './RadioComponent';
-import SelectComponent from './SelectComponent';
-import TextareaComponent from './TextareaComponent';
-import TextComponent from './TextComponent';
-import type { FieldsType } from '../features/Home';
+import CheckboxComponent from "./CheckboxComponent";
+import EmailComponent from "./EmailComponent";
+import NumberComponent from "./NumberComponent";
+import PasswordComponent from "./PasswordComponent";
+import RadioComponent from "./RadioComponent";
+import SelectComponent from "./SelectComponent";
+import TextareaComponent from "./TextareaComponent";
+import TextComponent from "./TextComponent";
+import { isShowAble } from "./shared/isShowAble";
+import { useSelector } from "react-redux";
+import type { RootState } from "../app/store";
+import type { FieldsType } from "../utils/types";
+import { useMemo } from "react";
 
 const componentMap: Record<string, React.FC<any> | undefined> = {
   radio: RadioComponent,
@@ -28,12 +32,15 @@ function Fields({
 }) {
   const Component = componentMap[field.type];
 
+  const formData = useSelector((state: RootState) => state.dynamicFormSaveData);
+  const flag = useMemo(() => {
+    return isShowAble(field.dependsOn, field.condition, formData);
+  }, [formData, field.dependsOn, field.condition]);
+
   return (
     <div>
-      {Component ? (
+      {Component && flag && (
         <Component field={field} triggerValidation={triggerValidation} />
-      ) : (
-        <p>Unsupported field type: {field.type}</p>
       )}
     </div>
   );

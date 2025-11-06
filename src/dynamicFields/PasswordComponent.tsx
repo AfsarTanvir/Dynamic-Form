@@ -1,16 +1,13 @@
-import type { FieldsType } from "../features/Home";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "../app/store";
 import { Form, Input } from "antd";
-import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
 import { buildValidationRules } from "../utils/validationHelpers";
+import { useSaveDataReducer } from "./hook/useSaveDataReducer";
+import type { FieldsType } from "../utils/types";
 
 function PasswordComponent({ field }: { field: FieldsType }) {
-  const dispatch = useDispatch<AppDispatch>();
-
+  const saveData = useSaveDataReducer();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    dispatch(dynamicFormSaveData.actions.radioDataInsert(value));
+    saveData(field.id, value);
   };
 
   return (

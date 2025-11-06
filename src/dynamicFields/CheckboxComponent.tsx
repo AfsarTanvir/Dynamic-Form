@@ -1,20 +1,18 @@
 import { useState } from "react";
-import type { FieldsType } from "../features/Home";
 import { Checkbox, type CheckboxChangeEvent } from "antd";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "../app/store";
-import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
+import { useSaveDataReducer } from "./hook/useSaveDataReducer";
+import type { FieldsType } from "../utils/types";
 
 function CheckboxComponent({ field }: { field: FieldsType }) {
   const [checkboxField, setCheckboxField] = useState(
     Boolean(field.defaultValue)
   );
-  const dispatch = useDispatch<AppDispatch>();
+  const saveData = useSaveDataReducer();
 
   const handleChange = (e: CheckboxChangeEvent) => {
     const value = e.target.checked;
     setCheckboxField(value);
-    dispatch(dynamicFormSaveData.actions.specialOffersDataInsert(value));
+    saveData(field.id, value);
   };
 
   return (

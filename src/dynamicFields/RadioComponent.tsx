@@ -1,16 +1,14 @@
-import type { FieldsType } from "../features/Home";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "../app/store";
-import { dynamicFormSaveData } from "../features/reduxData/dynamicFormSaveData";
 import { Form, Radio, type RadioChangeEvent } from "antd";
 import { buildValidationRules } from "../utils/validationHelpers";
+import { useSaveDataReducer } from "./hook/useSaveDataReducer";
+import type { FieldsType } from "../utils/types";
 
 function RadioComponent({ field }: { field: FieldsType }) {
-  const dispatch = useDispatch<AppDispatch>();
+  const saveData = useSaveDataReducer();
 
   const handleChange = (e: RadioChangeEvent) => {
     const value = e.target.value;
-    dispatch(dynamicFormSaveData.actions.radioDataInsert(value));
+    saveData(field.id, value);
   };
 
   return (

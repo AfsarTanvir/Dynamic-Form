@@ -9,4 +9,4 @@ function ShowData() {
   console.log("Show Data: ", sum);
 }
 
-export default ShowData
+export default ShowData;
