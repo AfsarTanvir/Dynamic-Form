@@ -10,10 +10,10 @@ export type ValidationType = {
 };
 
 export type ConditionType = {
-    field: string;
-    operator: string;
-    value: string | boolean;
-}
+  field: string;
+  operator: string;
+  value: string | boolean;
+};
 
 export type OptionsType = {
   label: string;
@@ -31,7 +31,7 @@ export type FieldsType = {
   defaultValue?: string | boolean;
   placeholder?: string;
   condition?: ConditionType;
-  dependsOn?: string; 
+  dependsOn?: string;
 };
 
 type FieldType = {
@@ -40,15 +40,15 @@ type FieldType = {
   remember?: string;
 };
 
-const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-  console.log('Success:', values);
+const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+  console.log("Success:", values);
 };
 
-const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-  console.log('Failed:', errorInfo);
+const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
+  console.log("Failed:", errorInfo);
 };
 
-type DataType = {
+export type DataType = {
   formId: string;
   title: string;
   fields: FieldsType[];
@@ -94,10 +94,10 @@ function Home() {
                 triggerValidation={triggerValidation}
               />
             ))}
+            <button onClick={handleSubmit}>Submit</button>
           </Form>
         </div>
       )}
-      <button onClick={handleSubmit}>Submit</button>
     </>
   );
 }

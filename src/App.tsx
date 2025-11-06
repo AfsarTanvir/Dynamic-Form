@@ -1,12 +1,11 @@
-import Home from "./features/Home"
-
+import FormRenderer from "./features/FormRenderer";
 function App() {
 
   return (
     <>
-      <Home />
+      <FormRenderer />
     </>
   );
 }
 
-export default App
+export default App;

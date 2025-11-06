@@ -25,32 +25,8 @@ function SelectComponent({ field }: { field: FieldsType }) {
     }
   };
 
-  const rulesArr: any[] = [];
-  switch (field.id) {
-    case "country":
-      rulesArr.push({
-        required: true,
-        message: "Please select a country",
-      });
-      break;
-    case "state":
-      rulesArr.push({
-        required: true,
-        message: "Please select a state",
-      });
-      break;
-    case "offerType":
-      rulesArr.push({
-        required: true,
-        message: "Please select offer type",
-      });
-      break;
-    default:
-      break;
-  }
-
   return (
-    <>
+    <div className="gapping">
       <Select placeholder={field.placeholder} defaultValue={field.defaultValue}>
         {field.options?.map((op) => (
           <Select.Option
@@ -62,7 +38,7 @@ function SelectComponent({ field }: { field: FieldsType }) {
           </Select.Option>
         ))}
       </Select>
-    </>
+    </div>
   );
 }
 

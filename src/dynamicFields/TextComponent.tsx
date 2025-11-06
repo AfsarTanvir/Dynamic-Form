@@ -54,61 +54,6 @@ function TextComponent({ field }: { field: FieldsType }) {
     }
   };
 
-  const rulesArr: any[] = [];
-  switch (field.id) {
-    case "companyName":
-      rulesArr.push({
-        required: true,
-        message: "Company name is required for business accounts",
-      });
-      break;
-    case "taxId":
-      rulesArr.push({
-        required: true,
-        message: "Company name is required for business accounts",
-      });
-      break;
-    case "city":
-      rulesArr.push({
-        required: true,
-        message: "Please select a city",
-      });
-      break;
-    case "state":
-      rulesArr.push({
-        required: true,
-        message: "Please select a state",
-      });
-      break;
-    case "zipCode":
-      rulesArr.push({
-        required: true,
-        message: "Zip code is required",
-      });
-      rulesArr.push({
-        pattern: "^[0-9]{5}$",
-        message: "Zip code must be 5 digits",
-      });
-      break;
-    case "adminCode":
-      rulesArr.push({
-        required: true,
-        message: "Any namdmin code is required for admin email",
-      });
-      rulesArr.push({
-        min: 6,
-        message: "Admin code must be at least 6 characters",
-      });
-      break;
-    case "comments":
-      rulesArr.push({
-        max: 500,
-        message: "Company name is required for business accounts",
-      });
-      break;
-    default:
-      break;
-  }
 
   return (
     <>

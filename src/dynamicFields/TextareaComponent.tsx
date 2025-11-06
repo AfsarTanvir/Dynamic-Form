@@ -19,17 +19,6 @@ function TextareaComponent({ field }: { field: FieldsType }) {
     }
   };
 
-  const rulesArr: any[] = [];
-  switch (field.id) {
-    case "comments":
-      rulesArr.push({
-        max: 500,
-        message: "Comments cannot exceed 500 characters",
-      });
-      break;
-    default:
-      break;
-  }
   return (
     <>
       <Form.Item
